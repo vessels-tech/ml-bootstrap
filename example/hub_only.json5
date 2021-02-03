@@ -1,0 +1,14 @@
+// this is a json5 formatted file
+// https://json5.org/
+{
+  currency: 'USD',
+  urls: {
+    fspiop: 'http://beta.moja-lab.live/api/fspiop',
+    alsAdmin: 'http://beta.moja-lab.live/api/admin/account-lookup-service-admin',
+    centralLedgerAdmin: 'http://beta.moja-lab.live/api/admin/central-ledger',
+  },
+  applicationUrls: {
+    oracle: 'http://beta.moja-lab.live/api/admin/oracle-simulator'
+  },
+  participants: [ ]
+}

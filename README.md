@@ -26,6 +26,46 @@ The most important parameters are:
 npm run ml-bootstrap -- -c /path/to/your/config
 ```
 
+For example:
+
+```
+$ npm run ml-bootstrap -- -c ./example/default.json5
+
+> @mojaloop/oss-lab-bootstrap@0.1.0 ml-bootstrap /home/lew/developer/mojaloop/ml-bootstrap
+> ts-node ./src/cli.ts "-c" "./example/default.json5"
+
+
+
+  Running: Hub Steps
+  Description: Sets up the hub accounts
+  |
+  - step: setup `HUB_MULTILATERAL_SETTLEMENT` account
+executeRequest failed with status: 400
+{
+  errorInformation: {
+    errorCode: '3003',
+    errorDescription: 'Add Party information error - Hub account has already been registered.'
+  }
+}
+  - step: setup `HUB_RECONCILIATION` account
+executeRequest failed with status: 400
+{
+  errorInformation: {
+    errorCode: '3003',
+    errorDescription: 'Add Party information error - Hub account has already been registered.'
+  }
+}
+  - step: setup `SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL`
+  - step: setup `NET_DEBIT_CAP_ADJUSTMENT_EMAIL`
+  - step: setup `NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL`
+  |
+  Hub Steps Passed
+  Passed with warnings: 
+    - setup `HUB_MULTILATERAL_SETTLEMENT` account: Error, Status: 400 Message: {"errorInformation":{"errorCode":"3003","errorDescription":"Add Party information error - Hub account has already been registered."}}
+    - setup `HUB_RECONCILIATION` account: Error, Status: 400 Message: {"errorInformation":{"errorCode":"3003","errorDescription":"Add Party information error - Hub account has already been registered."}}
+
+```
+
 
 Some other options include:
 ```bash
@@ -40,29 +80,8 @@ npm run ml-bootstrap -- participants -c /path/to/your/config
 npm run ml-bootstrap -- parties -c /path/to/your/config
 ```
 
-
-
-
-
-## Seeding the hackathon environment:
-
-1. Edit the files in `./src/config.ts`
-
-2. Set the necessary env vars:
-```bash
-export FSPIOP_URL=beta.moja-lab.live/api/fspiop
-export ELB_URL=beta.moja-lab.live/api/admin
-```
-
-2. Run the seeder
-```bash
-npm run start
-```
-
 ## TODO:
-
 - decent logging using central-services-logger
 - auto release and publish to npm
-- getting started guide with examples
 - integrate with pisp work
 - dynamic settlement account id
