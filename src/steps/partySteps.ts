@@ -1,6 +1,6 @@
-import { DFSPParticipant, GlobalConfig } from "../config";
+import { GlobalConfig } from "../config";
 import Requests from '../requests';
-import { SeedStep } from '../types';
+import { DFSPParticipant, SeedStep } from '../types';
 import { wrapWithRunResult } from '../utils';
 import { ConstConfig, GenericSteps } from './genericSteps';
 

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
-import { Party } from './config'
 import * as SDKStandardComponents from '@mojaloop/sdk-standard-components'
+import { Party } from 'types'
 
 
 export type PostHubAccountRequest = {

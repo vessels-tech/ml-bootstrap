@@ -3,9 +3,9 @@ import { v4 as uuid} from 'uuid'
 
 import Requests from '../requests';
 import { wrapWithRunResult } from '..//utils';
-import { DFSPParticipant, GlobalConfig, Participant, ParticipantType } from '../config';
-import { SeedStep } from '../types';
+import { DFSPParticipant, Participant, ParticipantType, SeedStep } from '../types';
 import { ConstConfig, GenericSteps } from './genericSteps';
+import { GlobalConfig } from 'config';
 
 
 const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: Participant): Array<SeedStep> => {
@@ -13,7 +13,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     {
       name: 'add participant',
       ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postParticipants(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postParticipants(globalConfig.urls.centralLedgerAdmin, {
         body: {
           name: participant.id,
           currency: globalConfig.currency
@@ -23,7 +23,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_GET`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_GET',
@@ -34,7 +34,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_PUT`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT',
@@ -45,7 +45,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR',
@@ -57,7 +57,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE',
@@ -66,10 +66,11 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
         }
       }))
     },
+    //TODO: reenable these for setting up the PISP set of APIs
     // {
     //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_POST`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_TRANSACTION_REQUEST_POST',
@@ -80,7 +81,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT',
@@ -91,7 +92,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR',
@@ -103,7 +104,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_REQUEST_POST`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_REQUEST_POST',
@@ -114,7 +115,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_REQUEST_PUT`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_REQUEST_PUT',
@@ -125,7 +126,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_REQUEST_PUT_ERROR`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_REQUEST_PUT_ERROR',
@@ -136,7 +137,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CREATE_CREDENTIAL_POST`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CREATE_CREDENTIAL_POST',
@@ -147,7 +148,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_POST`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_POST',
@@ -158,7 +159,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_GET`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_GET',
@@ -169,7 +170,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_PUT`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_PUT',
@@ -180,7 +181,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_PUT_ERROR`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_CONSENT_PUT_ERROR',
@@ -196,7 +197,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'add initial position and limits',
       ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postParticipantsPositionAndLimits(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postParticipantsPositionAndLimits(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           currency: globalConfig.currency,
@@ -211,7 +212,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'create settlement account',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postAccount(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postAccount(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         accountId: participant.settlementAccountId,
         body: {
@@ -229,7 +230,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_PUT`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT',
@@ -240,7 +241,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR',
@@ -252,7 +253,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR',
@@ -264,7 +265,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_QUOTES`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_QUOTES',
@@ -276,7 +277,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_TRANSFER_POST`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST',
@@ -287,7 +288,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_TRANSFER_PUT`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT',
@@ -298,7 +299,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_TRANSFER_ERROR`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR',
@@ -309,7 +310,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register email `NET_DEBIT_CAP_ADJUSTMENT_EMAIL`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'NET_DEBIT_CAP_ADJUSTMENT_EMAIL',
@@ -320,7 +321,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register email `SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL',
@@ -331,7 +332,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register email `NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL',
@@ -342,7 +343,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_BULK_TRANSFER_POST`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_BULK_TRANSFER_POST',
@@ -353,7 +354,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_BULK_TRANSFER_PUT`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_BULK_TRANSFER_PUT',
@@ -364,7 +365,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_BULK_TRANSFER_ERROR`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_BULK_TRANSFER_ERROR',
@@ -375,7 +376,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     // {
     //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT',
@@ -386,7 +387,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     // {
     //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR`',
     //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
     //     participantId: participant.id,
     //     body: {
     //       type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR',
@@ -397,7 +398,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_AUTHORIZATIONS`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS',
@@ -414,7 +415,7 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
       name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PATCH`',
       // TODO: fix this - we shouldn't have to ignore failure here
       ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'TP_CB_URL_TRANSACTION_REQUEST_PATCH',
@@ -425,7 +426,7 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_POST`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_POST',

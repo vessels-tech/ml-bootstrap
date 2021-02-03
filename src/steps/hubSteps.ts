@@ -22,7 +22,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
     {
       name: 'setup `HUB_MULTILATERAL_SETTLEMENT` account',
       ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
         body: {
           type: "HUB_MULTILATERAL_SETTLEMENT",
           currency: config.currency
@@ -32,7 +32,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
     {
       name: 'setup `HUB_RECONCILIATION` account',
       ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
         body: {
           type: "HUB_RECONCILIATION",
           currency: config.currency
@@ -42,7 +42,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
     {
       name: 'setup `SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedgerAdmin, {
         body: {
           type: "SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL",
           value: 'email@example.com'
@@ -52,7 +52,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
     {
       name: 'setup `NET_DEBIT_CAP_ADJUSTMENT_EMAIL`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedgerAdmin, {
         body: {
           type: "NET_DEBIT_CAP_ADJUSTMENT_EMAIL",
           value: 'email@example.com'
@@ -62,7 +62,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
     {
       name: 'setup `NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL`',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedger, {
+      command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedgerAdmin, {
         body: {
           type: "NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL",
           value: 'email@example.com'
