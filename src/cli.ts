@@ -2,8 +2,8 @@ import { Command, OptionValues } from 'commander'
 import { RunResultType } from './runResult'
 import { BootstrapType, SeedCollection } from './types'
 import chalk from 'chalk';
-import { loadFromFile, PACKAGE } from 'config';
-import getCollections from 'collections';
+import { loadFromFile, PACKAGE } from './config';
+import getCollections from './collections';
 
 const runCollection = async (collection: SeedCollection) => {
   const collectionNameFormatted = chalk.blue(collection.name)

@@ -1,5 +1,5 @@
-import { GlobalConfig } from "config";
-import { BootstrapType, DFSPParticipant, ParticipantType, SeedCollection } from "types";
+import { GlobalConfig } from "./config";
+import { BootstrapType, DFSPParticipant, ParticipantType, SeedCollection } from "./types";
 
 import hubSteps from './steps/hubSteps'
 import oracleSteps from './steps/oracleSteps'
