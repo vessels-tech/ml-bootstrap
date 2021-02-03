@@ -11,7 +11,7 @@
     "lint": "eslint ./src/**/*.ts *.js",
     "build": "tsc",
     "watch": "tsc -w",
-    "start": "ts-node ./src/cli.ts",
+    "hub": "ts-node ./src/cli.ts hub",
     "test:coverage": "jest --coverage --coverageThreshold='{}'",
     "test:coverage-check": "jest --coverage",
     "test:junit": "jest --reporters=default --reporters=jest-junit",
@@ -35,10 +35,12 @@
     "@mojaloop/sdk-standard-components": "^12.0.1",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
-    "commander": "^7.0.0"
+    "commander": "^7.0.0",
+    "convict": "^6.0.0"
   },
   "devDependencies": {
     "@mojaloop/api-snippets": "11.0.18",
+    "@types/convict": "^5.2.2",
     "@types/jest": "25.2.2",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "1.13.0",
