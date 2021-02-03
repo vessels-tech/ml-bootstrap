@@ -3,7 +3,7 @@
 
 A handy ts based cli tool for seeding and setting up a Mojaloop Hub based on a config file. No need for Postman scripts, or hacky environment files that you copy and paste around. 
 
-Look at [`./example/default.js`](./example/default.js) for an example config file.
+Look at [`./example/default.json5`](./example/default.json5) for an example config file.
 
 
 ## How To
@@ -18,8 +18,10 @@ npm install
 1. Create a new config file, take a look at the `./example/` dir for some examples.
 
 The most important parameters are:
-- `urls.fspiop`
-
+- `urls.fspiop` - the location of the FSPIOP API (`/parties`, `/participants`, `/quotes`)
+- `urls.alsAdmin` - The location of the ALS Admin API - used to register parties
+- `urls.centralLedgerAdmin` - The location of the central-ledger api - used to register DFSP callback endpoints
+- `applicationUrls.oracle` - This is used to sell the ALS which oracles to talk to
 
 1. Run the tool!
 ```bash

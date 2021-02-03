@@ -29,7 +29,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
             "value": `${config.applicationUrls.oracle}/oracle`,
             "endpointType": "URL"
           },
-          "currency": "USD",
+          "currency": config.currency,
           "isDefault": true
         }
       }))
