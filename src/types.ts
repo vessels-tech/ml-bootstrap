@@ -54,3 +54,10 @@ export interface PISPParticipant {
   fspiopCallbackUrl: string,
   thirdpartyCallbackUrl: string
 }
+
+export enum BootstrapType {
+  ALL = 'ALL',
+  HUB = 'HUB',
+  PARTICIPANTS = 'PARTICIPANTS',
+  PARTIES = 'PARTIES',
+}
