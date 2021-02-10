@@ -37,6 +37,11 @@ export interface Party {
   accounts?: Array<PartyAccount>
 }
 
+export interface Oracle {
+  oracleIdType: string,
+  endpoint: string,
+}
+
 export type Participant = DFSPParticipant | PISPParticipant
 export interface DFSPParticipant {
   id: string,

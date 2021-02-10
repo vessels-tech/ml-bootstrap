@@ -1,4 +1,4 @@
-import { Participant, ParticipantType } from './types'
+import { Oracle, Participant, ParticipantType } from './types'
 import Convict from 'convict'
 import PACKAGE from '../package.json'
 import path from 'path'
@@ -22,6 +22,7 @@ export interface GlobalConfig {
   applicationUrls: {
     oracle: string,
   },
+  oracles?: Array<Oracle>,
   participants: Array<Participant>
 }
 
@@ -58,11 +59,22 @@ export const ConvictConfig = Convict<GlobalConfig>({
   },
   applicationUrls: {
     oracle: {
-      doc: 'Switch endpoint for oracle simulator - used to point the ALS to the oracle sim',
+      doc: '[deprecated] Switch endpoint for oracle simulator - used to point the ALS to the oracle sim. Use `oracles` instead',
       format: '*',
       env: 'ORACLE_URL',
       default: '0.0.0.0:4004/oracle-simulator'
     },
+  },
+  oracles: {
+    doc: 'A list of oracles to register',
+    format: (val: any) => {
+      if (!Array.isArray(val)) {
+        throw new Error('`participants` must be an array')
+      }
+
+      //TODO: other validation!
+    },
+    default: []
   },
   participants: {
     doc: 'A list of participants (DFSPs, PISPs), with nested parties',
@@ -78,14 +90,19 @@ export const ConvictConfig = Convict<GlobalConfig>({
 })
 
 export function loadFromFile(filePath: string): GlobalConfig {
+  if (path.isAbsolute(filePath)) {
+    ConvictConfig.loadFile(filePath)
+  } else {
+    ConvictConfig.loadFile(path.join(__dirname, '..', filePath))
+  }
 
-  ConvictConfig.loadFile(path.join(__dirname, '..', filePath))
   ConvictConfig.validate({allowed: 'strict'})
 
   const resolvedConfig: GlobalConfig = {
     currency: ConvictConfig.get('currency'),
     urls: ConvictConfig.get('urls'),
     applicationUrls: ConvictConfig.get('applicationUrls'),
+    oracles: ConvictConfig.get('oracles'),
     participants: ConvictConfig.get('participants'),
   }
 

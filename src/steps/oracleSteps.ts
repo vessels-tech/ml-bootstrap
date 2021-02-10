@@ -1,4 +1,5 @@
 
+import { Logger } from '@mojaloop/sdk-standard-components';
 import { GlobalConfig } from '../config';
 import Requests from '../requests';
 import { SeedStep } from '../types';
@@ -17,6 +18,26 @@ const constConfig: ConstConfig =  {
 
 // Define steps here
 const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
+  if (config.oracles && config.oracles.length > 0) {
+    console.log('Using newer oracles config')
+    return config.oracles.map(oracleConfig => ({
+      name: `create a ${oracleConfig.oracleIdType} oracle`,
+      // This command is not idempotent
+      ignoreFailure: true,
+      command: wrapWithRunResult(() => Requests.postOracles(config.urls.alsAdmin, {
+        body: {
+          "oracleIdType": oracleConfig.oracleIdType,
+          "endpoint": {
+            "value": `${oracleConfig.endpoint}/oracle`,
+            "endpointType": "URL"
+          },
+          "currency": config.currency,
+          "isDefault": true
+        }
+      }))
+    }))
+  }
+
   return [
     {
       name: 'create a default oracle',
