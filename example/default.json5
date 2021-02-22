@@ -10,7 +10,7 @@
   applicationUrls: {
     oracle: 'http://beta.moja-lab.live/api/admin/oracle-simulator'
   },
-  oracle: [
+  oracles: [
     { oracleIdType: "MSISDN", endpoint: "http://beta.moja-lab.live/api/admin/oracle-simulator"}
   ],
   participants: [
