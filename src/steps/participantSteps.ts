@@ -424,6 +424,18 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
       }))
     },
     {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_POST`',
+      // TODO: fix this - we shouldn't have to ignore failure here
+      ignoreFailure: true,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_POST',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
       name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_POST`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
