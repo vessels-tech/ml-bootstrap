@@ -3,7 +3,7 @@ import { v4 as uuid} from 'uuid'
 
 import Requests from '../requests';
 import { wrapWithRunResult } from '..//utils';
-import { DFSPParticipant, Participant, ParticipantType, SeedStep } from '../types';
+import { DFSPParticipant, DFSPParticipantWithPISPSupport, Participant, ParticipantType, PISPParticipant, SeedStep } from '../types';
 import { ConstConfig, GenericSteps } from './genericSteps';
 import { GlobalConfig } from 'config';
 
@@ -192,7 +192,7 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
   ]
 }
 
-const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: DFSPParticipant): Array<SeedStep> => {
+const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: DFSPParticipant | DFSPParticipantWithPISPSupport): Array<SeedStep> => {
   return [
     {
       name: 'add initial position and limits',
@@ -395,6 +395,11 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     //     }
     //   }))
     // },
+  ]
+}
+
+const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: DFSPParticipantWithPISPSupport): Array<SeedStep> => {
+  return [
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_AUTHORIZATIONS`',
       ignoreFailure: false,
@@ -406,10 +411,33 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         }
       }))
     },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_POST`',
+      // TODO: fix this - we shouldn't have to ignore failure here
+      ignoreFailure: true,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_POST',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_POST`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_POST',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
   ]
 }
 
-const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: Participant): Array<SeedStep> => {
+const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: PISPParticipant): Array<SeedStep> => {
   return [
     {
       name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PATCH`',
@@ -464,6 +492,12 @@ function makeParticipantSteps(participant: Participant) {
     switch (participant.type) {
       case ParticipantType.DFSP: {
         return steps.concat(makeDfspSteps(constConfig, config, participant))
+      }
+      case ParticipantType.DFSP_SUPPORTING_PISP: {
+        return steps.concat(
+          makeDfspSteps(constConfig, config, participant),
+          makeDFSPSupportingPISPSteps(constConfig, config, participant)
+        )
       }
       case ParticipantType.PISP: {
         return steps.concat(makePispSteps(constConfig, config, participant))

@@ -18,6 +18,7 @@ export interface SeedCollection {
 
 export enum ParticipantType {
   DFSP = 'DFSP',
+  DFSP_SUPPORTING_PISP = 'DFSP_SUPPORTING_PISP',
   PISP = 'PISP'
 }
 
@@ -42,10 +43,18 @@ export interface Oracle {
   endpoint: string,
 }
 
-export type Participant = DFSPParticipant | PISPParticipant
+export type Participant = DFSPParticipant | DFSPParticipantWithPISPSupport | PISPParticipant
 export interface DFSPParticipant {
   id: string,
   type: ParticipantType.DFSP
+  settlementAccountId: string
+  simulatorAdminUrl: string,
+  fspiopCallbackUrl: string,
+  parties: Array<Party>
+}
+export interface DFSPParticipantWithPISPSupport {
+  id: string,
+  type: ParticipantType.DFSP_SUPPORTING_PISP
   settlementAccountId: string
   simulatorAdminUrl: string,
   fspiopCallbackUrl: string,
