@@ -14,7 +14,7 @@ function getCollections(bootstrapType: BootstrapType, config: GlobalConfig): Arr
       oracleSteps(config),
       ...config.participants.map(p => makeParticipantSteps(p)(config)),
       ...config.participants
-        .filter(p => p.type === ParticipantType.DFSP)
+        .filter(p => p.type === ParticipantType.DFSP || p.type === ParticipantType.DFSP_SUPPORTING_PISP)
         // we cast here because TS isn't smart enough to figure out the types after a filter
         .map(p => makePartySteps(p as unknown as DFSPParticipant)(config)),
     ]
@@ -30,7 +30,7 @@ function getCollections(bootstrapType: BootstrapType, config: GlobalConfig): Arr
       return [...config.participants.map(p => makeParticipantSteps(p)(config))]
     case BootstrapType.PARTIES:
       return [...config.participants
-        .filter(p => p.type === ParticipantType.DFSP)
+        .filter(p => p.type === ParticipantType.DFSP || p.type === ParticipantType.DFSP_SUPPORTING_PISP)
         // we cast here because TS isn't smart enough to figure out the types after a filter
         .map(p => makePartySteps(p as unknown as DFSPParticipant)(config)),
 
