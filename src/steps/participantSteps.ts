@@ -212,9 +212,19 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
     {
       name: 'create settlement account',
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postAccount(globalConfig.urls.centralLedgerAdmin, {
+      command: wrapWithRunResult(async () => {
+        const participantResponse = await Requests.getParticipant(globalConfig.urls.centralLedgerAdmin, participant.id);
+        const settlementAccount = participantResponse.data.accounts
+          .filter(account => account.ledgerAccountType === 'SETTLEMENT')
+          .pop();
+        
+        if (!settlementAccount) {
+          throw new Error(`Settlement account not found for: ${participant.id}`)
+        }
+
+        Requests.postAccount(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
-        accountId: participant.settlementAccountId,
+        accountId: `${settlementAccount.id}`,
         body: {
           transferId: uuid(),
           externalReference: "none",
@@ -225,7 +235,7 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
             currency: globalConfig.currency
           }
         }
-      }))
+      })})
     },
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_PUT`',

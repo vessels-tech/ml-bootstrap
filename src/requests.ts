@@ -88,6 +88,23 @@ export type PostALSParticipantRequest = {
   }
 }
 
+export type GetParticipantResponse = {
+  name: string,
+  created: string,
+  isActive: number,
+  accounts: Array<PartcipantAccount>
+}
+
+export type PartcipantAccount = {
+  id: number,
+  ledgerAccountType: string,
+  currency: SDKStandardComponents.TCurrency,
+  isActive: number,
+  createdDate: unknown,
+  createdBy: unknown,
+}
+
+
 export default class Requests {
   public static async postHubAccount(host: string, request: PostHubAccountRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/Hub/accounts`
@@ -169,6 +186,16 @@ export default class Requests {
     }
 
     return this.executeRequest(options)
+  }
+
+  public static async getParticipant(host: string, participantId: string): Promise<AxiosResponse<GetParticipantResponse>> {
+    const url = `${host}/participants/${participantId}`
+    const options: AxiosRequestConfig = {
+      method: 'get',
+      url,
+    }
+
+    return this.executeRequest(options);
   }
 
   public static async postAccount(host: string, request: PostAccountRequest): Promise<AxiosResponse<any>> {
