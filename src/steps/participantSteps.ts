@@ -450,6 +450,17 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         }
       }))
     },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_AUTHORIZATIONS`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
   ]
 }
 
