@@ -40,6 +40,23 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
       }))
     },
     {
+      name: 'create settlement model `DEFERREDNET`',
+      ignoreFailure: true,
+      command: wrapWithRunResult(() => Requests.postSettlementModel(config.urls.centralLedgerAdmin, {
+        body: {
+          name: `DEFERREDNET`,
+          settlementGranularity: `NET`,
+          settlementInterchange: `MULTILATERAL`,
+          settlementDelay: `DEFERRED`,
+          requireLiquidityCheck: true,
+          ledgerAccountType: `POSITION`,
+          autoPositionReset: true,
+          currency: config.currency,
+          settlementAccountType: `SETTLEMENT`,
+        }
+      }))
+    },
+    {
       name: 'setup `SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postHubEndpoints(config.urls.centralLedgerAdmin, {

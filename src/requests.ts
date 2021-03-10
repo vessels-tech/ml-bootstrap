@@ -10,6 +10,20 @@ export type PostHubAccountRequest = {
   }
 }
 
+export type PostSettlementModelRequest = {
+  body: {
+    name: string,
+    settlementGranularity: string,
+    settlementInterchange: string,
+    settlementDelay: string,
+    requireLiquidityCheck: boolean,
+    ledgerAccountType: string,
+    autoPositionReset: boolean,
+    currency: SDKStandardComponents.TCurrency,
+    settlementAccountType: string,
+  }
+}
+
 export type PostHubEndpointRequest = {
   body: {
     type: 'SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL' | 'NET_DEBIT_CAP_ADJUSTMENT_EMAIL' | 'NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL',
@@ -108,6 +122,22 @@ export type PartcipantAccount = {
 export default class Requests {
   public static async postHubAccount(host: string, request: PostHubAccountRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/Hub/accounts`
+    const options: AxiosRequestConfig = {
+      method: 'post',
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        ...request.body
+      }
+    }
+
+    return this.executeRequest(options)
+  }
+
+  public static async postSettlementModel(host: string, request: PostSettlementModelRequest): Promise<AxiosResponse<any>> {
+    const url = `${host}/settlementModels`
     const options: AxiosRequestConfig = {
       method: 'post',
       url,
