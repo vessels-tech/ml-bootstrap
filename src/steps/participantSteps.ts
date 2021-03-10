@@ -66,40 +66,6 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
         }
       }))
     },
-    //TODO: reenable these for setting up the PISP set of APIs
-    // {
-    //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_POST`',
-    //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-    //     participantId: participant.id,
-    //     body: {
-    //       type: 'TP_CB_URL_TRANSACTION_REQUEST_POST',
-    //       value: `${participant.thirdpartyCallbackUrl}`
-    //     }
-    //   }))
-    // },
-    // {
-    //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT`',
-    //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-    //     participantId: participant.id,
-    //     body: {
-    //       type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT',
-    //       value: `${participant.thirdpartyCallbackUrl}`
-    //     }
-    //   }))
-    // },
-    // {
-    //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR`',
-    //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-    //     participantId: participant.id,
-    //     body: {
-    //       type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR',
-    //       value: `${participant.thirdpartyCallbackUrl}`
-    //     }
-    //   }))
-    // },
     // PISP Specific steps, not relevant here
     // {
     //   name: 'register endpoint `TP_CB_URL_CONSENT_REQUEST_POST`',
