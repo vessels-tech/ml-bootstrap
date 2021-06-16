@@ -4,7 +4,7 @@ import { Command, OptionValues } from 'commander'
 import { RunResultType } from './runResult'
 import { BootstrapType, SeedCollection } from './types'
 import chalk from 'chalk';
-import { loadFromFile, PACKAGE } from './config';
+import { loadFromFile } from './config';
 import getCollections from './collections';
 
 const runCollection = async (collection: SeedCollection) => {
@@ -47,7 +47,6 @@ function makeBootstrapAction(bootstrapType: BootstrapType, options: OptionValues
 
 
 const program = new Command();
-program.version(PACKAGE.version);
 
 program
   .option('-c, --config <path/to/config>', 'bootstrap config file')

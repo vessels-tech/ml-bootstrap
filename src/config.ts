@@ -1,11 +1,8 @@
 import { Oracle, Participant, ParticipantType } from './types'
 import Convict from 'convict'
-import PACKAGE from '../package.json'
 import path from 'path'
 import json5 from 'json5'
 import SDKStandardComponents from '@mojaloop/sdk-standard-components'
-
-export { PACKAGE }
 
 
 export interface GlobalConfig {
