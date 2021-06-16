@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command, OptionValues } from 'commander'
 import { RunResultType } from './runResult'
 import { BootstrapType, SeedCollection } from './types'

@@ -1,8 +1,8 @@
 {
-  "name": "@mojaloop/oss-lab-bootstrap",
-  "version": "0.1.0",
+  "name": "ml-bootstrap",
+  "version": "0.2.0",
   "description": "Bootstrapper tool for Mojaloop OSS Lab",
-  "main": "dist/index.js",
+  "main": "dist/src/cli.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -16,6 +16,9 @@
     "test:coverage-check": "jest --coverage",
     "test:junit": "jest --reporters=default --reporters=jest-junit",
     "test:unit": "jest --testMatch '**/test/unit/**/*.(test|spec).ts'"
+  },
+  "bin": {
+    "ml-bootstrap": "./dist/src/cli.js"
   },
   "repository": {
     "type": "git",

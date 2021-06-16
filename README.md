@@ -6,7 +6,13 @@ A handy ts based cli tool for seeding and setting up a Mojaloop Hub based on a c
 Look at [`./example/default.json5`](./example/default.json5) for an example config file.
 
 
-## How To
+## How To -- npm/npx
+
+```bash
+npx ml-bootstrap
+```
+
+## How To -- Local Development
 
 1. Clone this repo: 
 ```bash
