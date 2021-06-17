@@ -9,7 +9,15 @@ export interface GlobalConfig {
   currency: SDKStandardComponents.TCurrency,
   // Urls to talk to services
   urls: {
-    fspiop: string,
+    fspiop: string | null,
+    alsEndpoint: string | null,
+    // Note: no support for other endpoints yet, since ml-boostrap doesn't need them
+    // quotesEndpoint
+    // bulkQuotesEndpoint
+    // transactionRequestsEndpoint
+    // transfersEndpoint
+    // bulkTransfersEndpoint
+    
     // als: string, //don't think we need this...
     alsAdmin: string,
     centralLedgerAdmin: string
@@ -36,10 +44,18 @@ export const ConvictConfig = Convict<GlobalConfig>({
   },
   urls: {
     fspiop: {
-      doc: 'Switch endpoint for fspiop(Mojaloop) API',
+      doc: 'Switch endpoint for fspiop(Mojaloop) API. '
+      + 'Use this if your mojaloop switch is running behind an API Gateway' 
+      + 'otherwise use the individual *endpoint definitions below',
       format: '*',
       env: 'FSPIOP_URL',
-      default: '0.0.0.0:4003'
+      default: null
+    },
+    alsEndpoint: {
+      doc: 'Endpoint for the account lookup service (`/parties` and `/participants` resources)',
+      format: '*',
+      env: 'ALS_URL',
+      default: null
     },
     alsAdmin: {
       doc: 'Switch endpoint for ALS Admin API',

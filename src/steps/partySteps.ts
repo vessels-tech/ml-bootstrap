@@ -12,12 +12,16 @@ function makeStepsForParticipantAndParties(config: GlobalConfig, participant: DF
     // For each party
     // 1. Register at the ALS
     // 2. Create an entry in the Simulator
-    // TODO: Anything else?
+
+    const participantsEndpoint = config.urls.fspiop || config.urls.alsEndpoint;
+    if (!participantsEndpoint) {
+      throw new Error('Endpoint for `/participants not defined. You must set either `urls.fspiop` or `urls.alsEndpoint')
+    }
 
     steps.push({
       name: `register with ALS: ${party.idType}/${party.idValue}`,
       ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postALSParticipant(config.urls.fspiop, {
+      command: wrapWithRunResult(() => Requests.postALSParticipant(participantsEndpoint, {
         headers: {
           'FSPIOP-Source': participant.id
         },

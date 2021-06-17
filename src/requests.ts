@@ -344,12 +344,12 @@ export default class Requests {
     } catch (err) {
       if (err.response) {
         Logger.warn(`executeRequest failed with status: ${err.response.status}`)
-        Logger.debug(err.response.data)
+        Logger.debug(JSON.stringify(err.response.data, null, 2))
 
         // TODO: better error handling
         throw new Error(`Status: ${err.response.status} Message: ${JSON.stringify(err.response.data)}`)
       }
-      Logger.warn('Generic Error', err.message);
+      Logger.warn('Generic Error' + err.message);
       throw err
     }
   }
