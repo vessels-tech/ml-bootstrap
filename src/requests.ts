@@ -4,6 +4,9 @@ import * as SDKStandardComponents from '@mojaloop/sdk-standard-components'
 import { Party } from 'types'
 
 
+// TODO: make this configurable
+const timeout = 15;
+
 export type PostHubAccountRequest = {
   body: {
     type: 'HUB_MULTILATERAL_SETTLEMENT' | 'HUB_RECONCILIATION',
@@ -123,10 +126,11 @@ export type PartcipantAccount = {
 export default class Requests {
   public static async postHubAccount(host: string, request: PostHubAccountRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/Hub/accounts`
-    Logger.debug('postHubAccount')
-    Logger.debug(url)
+    Logger.debug('postHubAccount - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -135,15 +139,16 @@ export default class Requests {
         ...request.body
       }
     }
-    Logger.silly(options)
-
     return this.executeRequest(options)
   }
 
   public static async postSettlementModel(host: string, request: PostSettlementModelRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/settlementModels`
+    Logger.debug('postSettlementModel - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -158,8 +163,11 @@ export default class Requests {
 
   public static async postHubEndpoints(host: string, request: PostHubEndpointRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/Hub/endpoints`
+    Logger.debug('postHubEndpoints - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -174,8 +182,11 @@ export default class Requests {
 
   public static async postOracles(host: string, request: PostOraclesRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/oracles`
+    Logger.debug('postOracles - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -192,8 +203,11 @@ export default class Requests {
 
   public static async postParticipants(host: string, request: PostParticipantsRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants`
+    Logger.debug('postParticipants - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -208,8 +222,11 @@ export default class Requests {
 
   public static async postParticipantsPositionAndLimits(host: string, request: PostParticipantsPositionAndLimitsRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/${request.participantId}/initialPositionAndLimits`
+    Logger.debug('postParticipantsPositionAndLimits - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -224,8 +241,11 @@ export default class Requests {
 
   public static async getParticipant(host: string, participantId: string): Promise<AxiosResponse<GetParticipantResponse>> {
     const url = `${host}/participants/${participantId}`
+    Logger.debug('getParticipant - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'get',
+      timeout,
       url,
     }
 
@@ -234,8 +254,11 @@ export default class Requests {
 
   public static async postAccount(host: string, request: PostAccountRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/${request.participantId}/accounts/${request.accountId}`
+    Logger.debug('postAccount - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -250,8 +273,11 @@ export default class Requests {
 
   public static async postEndpoint(host: string, request: PostEndpointsRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/${request.participantId}/endpoints`
+    Logger.debug('postEndpoint - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -266,8 +292,11 @@ export default class Requests {
 
   public static async postSimulatorParty(host: string, request: PostSimulatorPartyRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/repository/parties`
+    Logger.debug('postSimulatorParty - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -282,8 +311,11 @@ export default class Requests {
 
   public static async postALSParticipant(host: string, request: PostALSParticipantRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/${request.idType}/${request.idValueOrSubType}` + (request.idValue ? `/${request.idValue}` : '')
+    Logger.debug('postALSParticipant - ' + url)
+
     const options: AxiosRequestConfig = {
       method: 'post',
+      timeout,
       url,
       headers: {
         'Accept': 'application/vnd.interoperability.participants+json;version=1',
@@ -305,6 +337,9 @@ export default class Requests {
 
   private static async executeRequest(options: AxiosRequestConfig): Promise<AxiosResponse<any>> {
     try {
+      Logger.silly('executeRequest')
+      Logger.silly(JSON.stringify(options, null, 2))
+
       const result = await axios(options)
       return result;
     } catch (err) {
