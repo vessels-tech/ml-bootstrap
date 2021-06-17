@@ -288,6 +288,17 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
 const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: DFSPParticipantWithPISPSupport): Array<SeedStep> => {
   return [
     {
+      name: 'register endpoint `TP_CB_URL_ACCOUNTS_GET`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_ACCOUNTS_GET',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_AUTHORIZATIONS`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
@@ -370,17 +381,6 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS',
-          value: `${participant.thirdpartyCallbackUrl}`
-        }
-      }))
-    },
-    {
-      name: 'register endpoint `TP_CB_URL_ACCOUNTS_GET`',
-      ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-        participantId: participant.id,
-        body: {
-          type: 'TP_CB_URL_ACCOUNTS_GET',
           value: `${participant.thirdpartyCallbackUrl}`
         }
       }))
