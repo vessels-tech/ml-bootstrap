@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+const Logger = require('@mojaloop/central-services-logger')
+
 import { Command, OptionValues } from 'commander'
 import { RunResultType } from './runResult'
 import { BootstrapType, SeedCollection } from './types'
@@ -10,25 +12,26 @@ import getCollections from './collections';
 const runCollection = async (collection: SeedCollection) => {
   const collectionNameFormatted = chalk.blue(collection.name)
 
-  console.log(`\n\n  ${chalk.bold('Running')}: ${collectionNameFormatted}\n  ${chalk.bold('Description')}: ${collection.description}`)
-  console.log(`  |`)
+  Logger.info(`  ${chalk.bold('Running')}: ${collectionNameFormatted}`)
+  Logger.info(`  ${chalk.bold('Description')}: ${collection.description}`)
+  Logger.info(`  |`)
   const result = await collection.run()
-  console.log(`  |`)
+  Logger.info(`  |`)
   switch (result.type) {
     case RunResultType.SUCCESS: {
-      console.log(`  ${collectionNameFormatted} ${chalk.green(`Passed`)}`)
+      Logger.info(`  ${collectionNameFormatted} ${chalk.green(`Passed`)}`)
       if (result.warnings.length > 0) {
-        console.log(`  ${chalk.yellow('Passed with warnings:')} \n    - ${result.warnings.join('\n    - ')}`)
+        Logger.info(`  ${chalk.yellow('Passed with warnings:')} \n    - ${result.warnings.join('\n    - ')}`)
       }
 
       break;
     }
     case RunResultType.FAILURE:
-      console.log(`${collectionNameFormatted} ${chalk.red(`Failed`)}`)
+      Logger.info(`${collectionNameFormatted} ${chalk.red(`Failed`)}`)
       if (result.warnings.length > 0) {
-        console.log(`  ${chalk.yellow('Failed with warnings:')} \n    - ${result.warnings.join('\n    - ')}`)
+        Logger.info(`  ${chalk.yellow('Failed with warnings:')} \n    - ${result.warnings.join('\n    - ')}`)
       }
-      console.log(`  ${chalk.red('Failed with errors:')} \n    - ${result.errors.join('\n    - ')}`)
+      Logger.info(`  ${chalk.red('Failed with errors:')} \n    - ${result.errors.join('\n    - ')}`)
       break;
   }
 }

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -u
+
 # Notes:
 # I'm currently publishing this as lwilld
 # Increment the version in package.json yourself!
@@ -11,6 +14,8 @@ fi
 
 RELEASE_TAG=${RELEASE_TAG-`cat package.json | jq .version -r`}
 PACKAGE_NAME=${PACKAGE_NAME-`cat package.json | jq .name -r`}
+
+npm run build
 
 echo "Releasing ${PACKAGE_NAME}:${RELEASE_TAG}"
 

@@ -5,7 +5,8 @@ import { Party } from 'types'
 
 
 // TODO: make this configurable
-const timeout = 15;
+// Timeout in ms
+const timeout = 15 * 1000
 
 export type PostHubAccountRequest = {
   body: {
@@ -329,8 +330,6 @@ export default class Requests {
     }
 
 
-    console.log('options are', options)
-
     return this.executeRequest(options)
 
   }
@@ -344,13 +343,13 @@ export default class Requests {
       return result;
     } catch (err) {
       if (err.response) {
-        console.log(`executeRequest failed with status: ${err.response.status}`)
-        console.log(err.response.data)
+        Logger.warn(`executeRequest failed with status: ${err.response.status}`)
+        Logger.debug(err.response.data)
 
         // TODO: better error handling
         throw new Error(`Status: ${err.response.status} Message: ${JSON.stringify(err.response.data)}`)
       }
-      console.log('Generic Error', err.message);
+      Logger.warn('Generic Error', err.message);
       throw err
     }
   }
