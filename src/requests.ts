@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
+const Logger = require('@mojaloop/central-services-logger')
 import * as SDKStandardComponents from '@mojaloop/sdk-standard-components'
 import { Party } from 'types'
 
@@ -122,6 +123,8 @@ export type PartcipantAccount = {
 export default class Requests {
   public static async postHubAccount(host: string, request: PostHubAccountRequest): Promise<AxiosResponse<any>> {
     const url = `${host}/participants/Hub/accounts`
+    Logger.debug('postHubAccount')
+    Logger.debug(url)
     const options: AxiosRequestConfig = {
       method: 'post',
       url,
@@ -132,6 +135,7 @@ export default class Requests {
         ...request.body
       }
     }
+    Logger.silly(options)
 
     return this.executeRequest(options)
   }

@@ -90,7 +90,7 @@ export function loadFromFile(filePath: string): GlobalConfig {
   if (path.isAbsolute(filePath)) {
     ConvictConfig.loadFile(filePath)
   } else {
-    ConvictConfig.loadFile(path.join(__dirname, '..', filePath))
+    ConvictConfig.loadFile(path.join('./', filePath))
   }
 
   ConvictConfig.validate({allowed: 'strict'})

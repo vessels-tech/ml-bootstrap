@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import { GlobalConfig } from '../config';
 import { Result, RunResult, RunResultType } from '../runResult';
 import { SeedCollection, SeedStep } from '../types';
+
+const Logger = require('@mojaloop/central-services-logger')
 export interface ConstConfig {
   id: string,
   name: string,
@@ -30,7 +32,7 @@ export class GenericSteps implements SeedCollection {
     let errors: Array<Error> = []
 
     for (const step of this.steps) {
-      console.log("  - step:", chalk.magenta(step.name))
+      Logger.info("  - step:" + chalk.magenta(step.name))
       const result = await step.command()
 
       warnings = warnings.concat(result.warnings)
