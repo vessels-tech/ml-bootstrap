@@ -355,7 +355,7 @@ const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: Gl
       }))
     },
     {
-      name: 'register endpoint `TP_CB_URL_CONSENT_PUT`',
+      name: 'register endpoint `TP_CB_UsRL_CONSENT_PUT`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
@@ -365,8 +365,19 @@ const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: Gl
         }
       }))
     },
+    // TODO: this is an auth service endpoint, it should be in it's own makeAuthService steps section
+    {
+      name: 'register endpoint `TP_CB_URL_CONSENT_POST`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_CONSENT_POST',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
 
-    // TODO: add tp api callback endpoints here!
   ]
 }
 
