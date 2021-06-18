@@ -1,13 +1,13 @@
 {
   "name": "ml-bootstrap",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Bootstrapper tool for Mojaloop OSS Lab",
   "main": "dist/cli.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "scripts": {
+  "scripts": { 
     "lint": "eslint ./src/**/*.ts *.js",
     "build": "tsc",
     "watch": "tsc -w",
