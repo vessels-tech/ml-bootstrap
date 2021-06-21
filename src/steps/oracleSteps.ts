@@ -28,7 +28,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
         body: {
           "oracleIdType": oracleConfig.oracleIdType,
           "endpoint": {
-            "value": `${oracleConfig.endpoint}/oracle`,
+            "value": `${oracleConfig.endpoint}`,
             "endpointType": "URL"
           },
           "currency": config.currency,
