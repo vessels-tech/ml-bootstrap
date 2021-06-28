@@ -388,6 +388,28 @@ const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: Gl
         }
       }))
     },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_POST`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_POST',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
 
   ]
 }
@@ -579,6 +601,39 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         participantId: participant.id,
         body: {
           type: 'TP_CB_URL_CONSENT_PATCH',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_ACCOUNTS_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_ACCOUNTS_PUT_ERROR',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_POST`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_POST',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR',
           value: `${participant.thirdpartyCallbackUrl}`
         }
       }))
