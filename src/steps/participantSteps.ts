@@ -260,28 +260,6 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         }
       }))
     },
-    // {
-    //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT`',
-    //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-    //     participantId: participant.id,
-    //     body: {
-    //       type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT',
-    //       value: `${participant.thirdpartyCallbackUrl}`
-    //     }
-    //   }))
-    // },
-    // {
-    //   name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR`',
-    //   ignoreFailure: false,
-    //   command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-    //     participantId: participant.id,
-    //     body: {
-    //       type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR',
-    //       value: `${participant.thirdpartyCallbackUrl}`
-    //     }
-    //   }))
-    // },
   ]
 }
 
@@ -305,7 +283,7 @@ const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: Gl
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS',
-          value: `${participant.thirdpartyCallbackUrl}`
+          value: `${participant.fspiopCallbackUrl}`
         }
       }))
     },
@@ -410,7 +388,28 @@ const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: Gl
         }
       }))
     },
-
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
   ]
 }
 
@@ -451,6 +450,7 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         }
       }))
     },
+    // Note: this should be removed, once we move the authorizations forwarding to the 3p-api-adapter instead of tx-requests-service
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_AUTHORIZATIONS`',
       ignoreFailure: false,
@@ -628,12 +628,45 @@ const makePispSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
       }))
     },
     {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
       name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
           type: 'TP_CB_URL_TRANSACTION_REQUEST_PUT_ERROR',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT',
+          value: `${participant.thirdpartyCallbackUrl}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'TP_CB_URL_TRANSACTION_REQUEST_AUTH_PUT_ERROR',
           value: `${participant.thirdpartyCallbackUrl}`
         }
       }))
