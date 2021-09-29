@@ -1,4 +1,4 @@
-import { GlobalConfig, formatAndValidateConfig } from "../../src/config"
+import { GlobalConfig, formatAndValidateConfig, LooseGlobalConfig } from "../../src/config"
 import { shouldNotBeExecuted } from "./utils"
 
 
@@ -6,7 +6,7 @@ describe('config', () => {
   describe('formatAndValidateConfig', () => {
     it('throws if both currency and currencies is specified', () => {
       // Arrange
-      const input: GlobalConfig = {
+      const input: LooseGlobalConfig = {
         currency: 'USD',
         currencies: ['AED'],
         urls: {
@@ -37,7 +37,7 @@ describe('config', () => {
 
     it('coerces old currency config into new format', () => {
       // Arrange
-      const input: GlobalConfig = {
+      const input: LooseGlobalConfig = {
         currency: 'USD',
         currencies: [],
         urls: {
