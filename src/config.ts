@@ -6,10 +6,38 @@ import SDKStandardComponents from '@mojaloop/sdk-standard-components'
 const Logger = require('@mojaloop/central-services-logger')
 
 
-export interface GlobalConfig {
+export interface LooseGlobalConfig {
   // deprecated - use `currencies` instead
   currency?: SDKStandardComponents.TCurrency,
 
+  // A list of currencies that the hub supports
+  currencies: Array<SDKStandardComponents.TCurrency>,
+
+  // Urls to talk to services
+  urls: {
+    fspiop: string | null,
+    alsEndpoint: string | null,
+    // Note: no support for other endpoints yet, since ml-boostrap doesn't need them
+    // quotesEndpoint
+    // bulkQuotesEndpoint
+    // transactionRequestsEndpoint
+    // transfersEndpoint
+    // bulkTransfersEndpoint
+
+    // als: string, //don't think we need this...
+    alsAdmin: string,
+    centralLedgerAdmin: string
+  },
+  // // Urls to be passed into internal services
+  // // for registering the correct callbacks
+  applicationUrls: {
+    oracle: string,
+  },
+  oracles?: Array<Oracle>,
+  participants: Array<Participant>
+}
+
+export interface GlobalConfig {
   // A list of currencies that the hub supports
   currencies: Array<SDKStandardComponents.TCurrency>,
 
@@ -33,14 +61,14 @@ export interface GlobalConfig {
   applicationUrls: {
     oracle: string,
   },
-  oracles?: Array<Oracle>,
+  oracles: Array<Oracle>,
   participants: Array<Participant>
 }
 
 Convict.addParser({ extension: 'json5', parse: json5.parse})
 
 
-export const ConvictConfig = Convict<GlobalConfig>({
+export const ConvictConfig = Convict<LooseGlobalConfig>({
   currency: {
     doc: 'DEPRECATED. Use currencies instead. The currency of the switch',
     // TODO: how can we specify the `TCurrency` type here?
@@ -97,10 +125,8 @@ export const ConvictConfig = Convict<GlobalConfig>({
     doc: 'A list of oracles to register',
     format: (val: any) => {
       if (!Array.isArray(val)) {
-        throw new Error('`participants` must be an array')
+        throw new Error('`oracles` must be an array')
       }
-
-      //TODO: other validation!
     },
     default: []
   },
@@ -126,7 +152,7 @@ export function loadFromFile(filePath: string): GlobalConfig {
 
   ConvictConfig.validate({allowed: 'strict'})
 
-  const resolvedConfig: GlobalConfig = {
+  const resolvedConfig: LooseGlobalConfig = {
     currency: ConvictConfig.get('currency'),
     currencies: ConvictConfig.get('currencies'),
     urls: ConvictConfig.get('urls'),
@@ -138,7 +164,11 @@ export function loadFromFile(filePath: string): GlobalConfig {
   return formatAndValidateConfig(resolvedConfig)
 }
 
-export function formatAndValidateConfig(resolvedConfig: GlobalConfig): GlobalConfig {
+export function formatAndValidateConfig(resolvedConfig: LooseGlobalConfig): GlobalConfig {
+
+  let oracles = resolvedConfig.oracles
+  
+
   // Validation errors/warnings
   if (resolvedConfig.currency) {
     Logger.warn('Using deprecated config `currency`. Please use `currencies` instead.')
@@ -155,6 +185,23 @@ export function formatAndValidateConfig(resolvedConfig: GlobalConfig): GlobalCon
     resolvedConfig.currency = undefined
   }
 
-  return resolvedConfig
+  // add a default MSISDN oracle if not specified
+  if (!oracles || oracles.length === 0) {
+    Logger.warn('Please specify `oracles`. For now, defaulting to a MSISDN oracle')
+
+    oracles = [
+      {
+        oracleIdType: 'MSISDN',
+        endpoint: resolvedConfig.applicationUrls.oracle
+      }
+    ]
+  }
+
+  const strictConfig: GlobalConfig = {
+    oracles,
+    ...resolvedConfig
+  }
+
+  return strictConfig
 
 }

@@ -6,20 +6,32 @@ import { wrapWithRunResult } from '..//utils';
 import { DFSPParticipant, DFSPParticipantWithPISPSupport, Participant, ParticipantType, PISPParticipant, SeedStep } from '../types';
 import { ConstConfig, GenericSteps } from './genericSteps';
 import { GlobalConfig } from 'config';
+import { TCurrency } from '@mojaloop/sdk-standard-components';
 
 
-const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: Participant): Array<SeedStep> => {
-  return [
-    {
+const makeCommonSteps = (
+  _constConfig: ConstConfig, 
+  globalConfig: GlobalConfig, 
+  participant: Participant, 
+  currencies: Array<TCurrency>
+  ): Array<SeedStep> => {
+  const currencySteps: Array<SeedStep> = []
+
+  currencies.forEach(currency => {
+    currencySteps.push({
       name: 'add participant',
       ignoreFailure: true,
       command: wrapWithRunResult(() => Requests.postParticipants(globalConfig.urls.centralLedgerAdmin, {
         body: {
           name: participant.id,
-          currency: globalConfig.currency
+          currency
         }
       }))
-    },
+    },)
+  })
+
+  return [
+    ...currencySteps,
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_GET`',
       ignoreFailure: false,
@@ -69,15 +81,22 @@ const makeCommonSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, 
   ]
 }
 
-const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, participant: DFSPParticipant | DFSPParticipantWithPISPSupport): Array<SeedStep> => {
-  return [
-    {
+const makeDfspSteps = (
+  _constConfig: ConstConfig, 
+  globalConfig: GlobalConfig, 
+  participant: DFSPParticipant | DFSPParticipantWithPISPSupport, 
+  currencies: Array<TCurrency>
+  ): Array<SeedStep> => {
+
+  const currencySteps: Array<SeedStep> = []
+  currencies.forEach(currency => {
+    currencySteps.push({
       name: 'add initial position and limits',
       ignoreFailure: true,
       command: wrapWithRunResult(() => Requests.postParticipantsPositionAndLimits(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
         body: {
-          currency: globalConfig.currency,
+          currency,
           limit: {
             type: "NET_DEBIT_CAP",
             value: 1000000
@@ -86,34 +105,41 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         }
       }))
     },
-    {
-      name: 'create settlement account',
-      ignoreFailure: false,
-      command: wrapWithRunResult(async () => {
-        const participantResponse = await Requests.getParticipant(globalConfig.urls.centralLedgerAdmin, participant.id);
-        const settlementAccount = participantResponse.data.accounts
-          .filter(account => account.ledgerAccountType === 'SETTLEMENT')
-          .pop();
-        
-        if (!settlementAccount) {
-          throw new Error(`Settlement account not found for: ${participant.id}`)
-        }
+      {
+        name: 'create settlement account',
+        ignoreFailure: false,
+        command: wrapWithRunResult(async () => {
+          const participantResponse = await Requests.getParticipant(globalConfig.urls.centralLedgerAdmin, participant.id);
+          const settlementAccount = participantResponse.data.accounts
+            .filter(account => account.ledgerAccountType === 'SETTLEMENT')
+            .filter(account => account.currency === currency)
+            .pop();
 
-        Requests.postAccount(globalConfig.urls.centralLedgerAdmin, {
-        participantId: participant.id,
-        accountId: `${settlementAccount.id}`,
-        body: {
-          transferId: uuid(),
-          externalReference: "none",
-          action: "recordFundsIn",
-          reason: "Initial settlement amount",
-          amount: {
-            amount: "1000000",
-            currency: globalConfig.currency
+          if (!settlementAccount) {
+            throw new Error(`Settlement account not found for: ${participant.id} and currency: ${currency}`)
           }
-        }
-      })})
-    },
+
+          Requests.postAccount(globalConfig.urls.centralLedgerAdmin, {
+            participantId: participant.id,
+            accountId: `${settlementAccount.id}`,
+            body: {
+              transferId: uuid(),
+              externalReference: "none",
+              action: "recordFundsIn",
+              reason: "Initial settlement amount",
+              amount: {
+                amount: "1000000",
+                currency
+              }
+            }
+          })
+        })
+      },)
+
+  })
+
+
+  return [
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_PUT`',
       ignoreFailure: false,
@@ -156,7 +182,6 @@ const makeDfspSteps = (_constConfig: ConstConfig, globalConfig: GlobalConfig, pa
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_QUOTES',
-          // TODO: this looks wrong to me...
           value: `${participant.fspiopCallbackUrl}`
         }
       }))
@@ -717,15 +742,15 @@ function makeParticipantSteps(participant: Participant) {
   }
 
   const stepGenerator = (config: GlobalConfig) => {
-    let steps = makeCommonSteps(constConfig, config, participant)
+    let steps = makeCommonSteps(constConfig, config, participant, config.currencies)
 
     switch (participant.type) {
       case ParticipantType.DFSP: {
-        return steps.concat(makeDfspSteps(constConfig, config, participant))
+        return steps.concat(makeDfspSteps(constConfig, config, participant, config.currencies))
       }
       case ParticipantType.DFSP_SUPPORTING_PISP: {
         return steps.concat(
-          makeDfspSteps(constConfig, config, participant),
+          makeDfspSteps(constConfig, config, participant, config.currencies),
           makeDFSPSupportingPISPSteps(constConfig, config, participant)
         )
       }

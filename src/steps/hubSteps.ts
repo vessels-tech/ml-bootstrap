@@ -17,44 +17,8 @@ const constConfig: ConstConfig =  {
 
 // Define steps here
 const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
-  return [
-    {
-      name: 'setup `HUB_MULTILATERAL_SETTLEMENT` account',
-      ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
-        body: {
-          type: "HUB_MULTILATERAL_SETTLEMENT",
-          currency: config.currency
-        }
-      }))
-    },
-    {
-      name: 'setup `HUB_RECONCILIATION` account',
-      ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
-        body: {
-          type: "HUB_RECONCILIATION",
-          currency: config.currency
-        }
-      }))
-    },
-    {
-      name: 'create settlement model `DEFERREDNET`',
-      ignoreFailure: true,
-      command: wrapWithRunResult(() => Requests.postSettlementModel(config.urls.centralLedgerAdmin, {
-        body: {
-          name: `DEFERREDNET`,
-          settlementGranularity: `NET`,
-          settlementInterchange: `MULTILATERAL`,
-          settlementDelay: `DEFERRED`,
-          requireLiquidityCheck: true,
-          ledgerAccountType: `POSITION`,
-          autoPositionReset: true,
-          currency: config.currency,
-          settlementAccountType: `SETTLEMENT`,
-        }
-      }))
-    },
+
+  const commonSteps = [
     {
       name: 'setup `SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL`',
       ignoreFailure: false,
@@ -85,6 +49,54 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
         }
       }))
     }
+  ]
+
+  const perCurrencySteps: Array<SeedStep> = []
+  config.currencies.forEach(currency => {
+    perCurrencySteps.push(
+      {
+        name: 'setup `HUB_MULTILATERAL_SETTLEMENT` account',
+        ignoreFailure: true,
+        command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
+          body: {
+            type: "HUB_MULTILATERAL_SETTLEMENT",
+            currency
+          }
+        }))
+      },
+      {
+        name: 'setup `HUB_RECONCILIATION` account',
+        ignoreFailure: true,
+        command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
+          body: {
+            type: "HUB_RECONCILIATION",
+            currency
+          }
+        }))
+      },
+      {
+        name: 'create settlement model `DEFERREDNET`',
+        ignoreFailure: true,
+        command: wrapWithRunResult(() => Requests.postSettlementModel(config.urls.centralLedgerAdmin, {
+          body: {
+            name: `DEFERREDNET`,
+            settlementGranularity: `NET`,
+            settlementInterchange: `MULTILATERAL`,
+            settlementDelay: `DEFERRED`,
+            requireLiquidityCheck: true,
+            ledgerAccountType: `POSITION`,
+            autoPositionReset: true,
+            currency,
+            settlementAccountType: `SETTLEMENT`,
+          }
+        }))
+      }
+    )
+  })
+
+  return [
+    ...commonSteps,
+    ...perCurrencySteps
   ]
 }
 
