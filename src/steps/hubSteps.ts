@@ -79,7 +79,9 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
         ignoreFailure: true,
         command: wrapWithRunResult(() => Requests.postSettlementModel(config.urls.centralLedgerAdmin, {
           body: {
-            name: `DEFERREDNET`,
+            // the API uses name as a uniqueness constraint, so we need to register different names for each 
+            // currency
+            name: `DEFERREDNET${currency}`,
             settlementGranularity: `NET`,
             settlementInterchange: `MULTILATERAL`,
             settlementDelay: `DEFERRED`,
