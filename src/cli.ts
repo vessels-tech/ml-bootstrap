@@ -2,7 +2,7 @@
 
 const Logger = require('@mojaloop/central-services-logger')
 
-import { Command, OptionValues } from 'commander'
+import { Command, option, OptionValues } from 'commander'
 import { RunResultType } from './runResult'
 import { BootstrapType, SeedCollection } from './types'
 import chalk from 'chalk';
@@ -38,9 +38,16 @@ const runCollection = async (collection: SeedCollection) => {
 
 function makeBootstrapAction(bootstrapType: BootstrapType, options: OptionValues) {
   return async () => {
+    if (options.fspid) {
+      // User has specified an fspId to run
+      if (bootstrapType === BootstrapType.HUB) {
+        throw new Error('invalid input. Cannot specify fspId AND hub options')
+      }
+    }
+
     // Load the config file
     const config = loadFromFile(options.config)
-    const collections = getCollections(bootstrapType, config)
+    const collections = getCollections(bootstrapType, config, options.fspid)
 
     for (const collection of collections) {
       await runCollection(collection)
@@ -53,6 +60,11 @@ const program = new Command();
 
 program
   .option('-c, --config <path/to/config>', 'bootstrap config file')
+  .option(
+    '-f, --fspid <fspid>', 
+    'fspid of a participant specifed in the config file. \n\t\t\t\t Use this option to bootstrap only 1 participant at a time',
+    undefined
+  )
 
 program.description('bootstrap all, Hub, DFSPs, PISPs, Parties')
   .action(makeBootstrapAction(BootstrapType.ALL, program.opts()))

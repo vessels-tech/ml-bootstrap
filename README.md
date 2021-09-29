@@ -86,10 +86,15 @@ npm run ml-bootstrap -- participants -c /path/to/your/config
 
 # bootstrap only the parties (end users)
 npm run ml-bootstrap -- parties -c /path/to/your/config
+
+# bootstrap only a single participant by name
+npm run ml-bootstrap -- fspid=figmm -c /path/to/your/config
 ```
 
 ## TODO:
-- decent logging using central-services-logger
-- auto release and publish to npm
-- integrate with pisp work
-- dynamic settlement account id
+- [ ] decent logging using central-services-logger
+- [ ] auto release and publish to npm
+- [x] integrate with pisp work
+- [x] dynamic settlement account id
+- [x] bootstrap only one participant by name
+- [ ] allow a hub to specify more than one currency

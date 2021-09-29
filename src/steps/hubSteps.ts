@@ -17,7 +17,6 @@ const constConfig: ConstConfig =  {
 
 // Define steps here
 const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
-
   return [
     {
       name: 'setup `HUB_MULTILATERAL_SETTLEMENT` account',

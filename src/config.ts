@@ -2,11 +2,16 @@ import { Oracle, Participant, ParticipantType } from './types'
 import Convict from 'convict'
 import path from 'path'
 import json5 from 'json5'
-import SDKStandardComponents from '@mojaloop/sdk-standard-components'
+import SDKStandardComponents, { Logger } from '@mojaloop/sdk-standard-components'
 
 
 export interface GlobalConfig {
-  currency: SDKStandardComponents.TCurrency,
+  // deprecated - use `currencies` instead
+  currency?: SDKStandardComponents.TCurrency,
+
+  // A list of currencies that the hub supports
+  currencies: Array<SDKStandardComponents.TCurrency>,
+
   // Urls to talk to services
   urls: {
     fspiop: string | null,
@@ -36,11 +41,20 @@ Convict.addParser({ extension: 'json5', parse: json5.parse})
 
 export const ConvictConfig = Convict<GlobalConfig>({
   currency: {
-    doc: 'The currency of the switch',
+    doc: 'DEPRECATED. Use currencies instead. The currency of the switch',
     // TODO: how can we specify the `TCurrency` type here?
     format: String,
     default:'USD',
     env: 'CURRENCY'
+  },
+  currencies: {
+    doc: 'A list of currencies to register with the Hub account and DFSP accounts',
+    format: (val: any) => {
+      if (!Array.isArray(val)) {
+        throw new Error('`currencies` must be an array')
+      }
+    },
+    default: [],
   },
   urls: {
     fspiop: {
@@ -113,11 +127,34 @@ export function loadFromFile(filePath: string): GlobalConfig {
 
   const resolvedConfig: GlobalConfig = {
     currency: ConvictConfig.get('currency'),
+    currencies: ConvictConfig.get('currencies'),
     urls: ConvictConfig.get('urls'),
     applicationUrls: ConvictConfig.get('applicationUrls'),
     oracles: ConvictConfig.get('oracles'),
     participants: ConvictConfig.get('participants'),
   }
 
+  return formatAndValidateConfig(resolvedConfig)
+}
+
+export function formatAndValidateConfig(resolvedConfig: GlobalConfig): GlobalConfig {
+  // Validation errors/warnings
+  if (resolvedConfig.currency) {
+    //@ts-ignore
+    Logger.warn('Using deprecated config `currency`. Please use `currencies` instead.')
+
+    // user has specified both options. This is an error
+    if (resolvedConfig.currencies.length > 0) {
+      throw new Error('Cannot specify both `currency` and `currencies`. Please use updated config')
+    }
+
+    // format to be friendly to the new version
+    resolvedConfig.currencies = [resolvedConfig.currency]
+
+    // reset so we don't start doing the wrong thing elsewhere
+    resolvedConfig.currency = undefined
+  }
+
   return resolvedConfig
+
 }
