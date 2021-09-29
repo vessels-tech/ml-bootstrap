@@ -2,7 +2,8 @@ import { Oracle, Participant, ParticipantType } from './types'
 import Convict from 'convict'
 import path from 'path'
 import json5 from 'json5'
-import SDKStandardComponents, { Logger } from '@mojaloop/sdk-standard-components'
+import SDKStandardComponents from '@mojaloop/sdk-standard-components'
+const Logger = require('@mojaloop/central-services-logger')
 
 
 export interface GlobalConfig {
@@ -140,7 +141,6 @@ export function loadFromFile(filePath: string): GlobalConfig {
 export function formatAndValidateConfig(resolvedConfig: GlobalConfig): GlobalConfig {
   // Validation errors/warnings
   if (resolvedConfig.currency) {
-    //@ts-ignore
     Logger.warn('Using deprecated config `currency`. Please use `currencies` instead.')
 
     // user has specified both options. This is an error

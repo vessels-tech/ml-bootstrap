@@ -26,15 +26,57 @@ describe('config', () => {
       
       // Act
       try {
-        const result = formatAndValidateConfig(input)
+        formatAndValidateConfig(input)
         shouldNotBeExecuted()
       } catch(err) {
         // Assert
-        expect(err).toBe('Cannot specify both `currency` and `currencies`. Please use updated config')
+        const message = (err as unknown as Error).message
+        expect(message).toMatch('Cannot specify both `currency` and `currencies`. Please use updated config')
       }
     })
 
+    it('coerces old currency config into new format', () => {
+      // Arrange
+      const input: GlobalConfig = {
+        currency: 'USD',
+        currencies: [],
+        urls: {
+          fspiop: 'example',
+          alsEndpoint: 'example',
+          alsAdmin: 'example',
+          centralLedgerAdmin: 'example',
+        },
+        applicationUrls: {
+          oracle: 'example'
+        },
+        oracles: [
+          { oracleIdType: "MSISDN", endpoint: "http://beta.moja-lab.live/api/admin/oracle-simulator" }
+        ],
+        participants: []
+      }
+      const expected = {
+        currency: undefined,
+        currencies: ['USD'],
+        urls: {
+          fspiop: 'example',
+          alsEndpoint: 'example',
+          alsAdmin: 'example',
+          centralLedgerAdmin: 'example',
+        },
+        applicationUrls: {
+          oracle: 'example'
+        },
+        oracles: [
+          { oracleIdType: "MSISDN", endpoint: "http://beta.moja-lab.live/api/admin/oracle-simulator" }
+        ],
+        participants: []
+      }
 
-    it.todo('prints a warning when using the outdated currency config')
+      // Act
+      const result = formatAndValidateConfig(input)
+      
+      // Assert
+      expect(result).toStrictEqual(expected)
+    })
   })
 })
