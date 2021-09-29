@@ -55,7 +55,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
   config.currencies.forEach(currency => {
     perCurrencySteps.push(
       {
-        name: 'setup `HUB_MULTILATERAL_SETTLEMENT` account',
+        name: `setup 'HUB_MULTILATERAL_SETTLEMENT' account for ${currency}`,
         ignoreFailure: true,
         command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
           body: {
@@ -65,7 +65,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
         }))
       },
       {
-        name: 'setup `HUB_RECONCILIATION` account',
+        name: `setup 'HUB_RECONCILIATION' account for ${currency}`,
         ignoreFailure: true,
         command: wrapWithRunResult(() => Requests.postHubAccount(config.urls.centralLedgerAdmin, {
           body: {
@@ -75,7 +75,7 @@ const stepGenerator = (config: GlobalConfig): Array<SeedStep> => {
         }))
       },
       {
-        name: 'create settlement model `DEFERREDNET`',
+        name: `create settlement model 'DEFERREDNET' for ${currency}`,
         ignoreFailure: true,
         command: wrapWithRunResult(() => Requests.postSettlementModel(config.urls.centralLedgerAdmin, {
           body: {

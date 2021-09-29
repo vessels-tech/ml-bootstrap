@@ -71,9 +71,8 @@ Convict.addParser({ extension: 'json5', parse: json5.parse})
 export const ConvictConfig = Convict<LooseGlobalConfig>({
   currency: {
     doc: 'DEPRECATED. Use currencies instead. The currency of the switch',
-    // TODO: how can we specify the `TCurrency` type here?
     format: String,
-    default:'USD',
+    default: undefined,
     env: 'CURRENCY'
   },
   currencies: {
@@ -168,9 +167,9 @@ export function formatAndValidateConfig(resolvedConfig: LooseGlobalConfig): Glob
 
   let oracles = resolvedConfig.oracles
   
-
   // Validation errors/warnings
   if (resolvedConfig.currency) {
+    console.log('resolvedConfig.currency', resolvedConfig.currency)
     Logger.warn('Using deprecated config `currency`. Please use `currencies` instead.')
 
     // user has specified both options. This is an error

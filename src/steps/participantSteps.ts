@@ -19,7 +19,7 @@ const makeCommonSteps = (
 
   currencies.forEach(currency => {
     currencySteps.push({
-      name: 'add participant',
+      name: `Add participant: ${participant.id} and currency: ${currency}`,
       ignoreFailure: true,
       command: wrapWithRunResult(() => Requests.postParticipants(globalConfig.urls.centralLedgerAdmin, {
         body: {
@@ -91,7 +91,7 @@ const makeDfspSteps = (
   const currencySteps: Array<SeedStep> = []
   currencies.forEach(currency => {
     currencySteps.push({
-      name: 'add initial position and limits',
+      name: `add initial position and limits for ${currency}`,
       ignoreFailure: true,
       command: wrapWithRunResult(() => Requests.postParticipantsPositionAndLimits(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
@@ -106,7 +106,7 @@ const makeDfspSteps = (
       }))
     },
       {
-        name: 'create settlement account',
+        name: `create settlement account for ${currency}`,
         ignoreFailure: false,
         command: wrapWithRunResult(async () => {
           const participantResponse = await Requests.getParticipant(globalConfig.urls.centralLedgerAdmin, participant.id);
@@ -135,7 +135,6 @@ const makeDfspSteps = (
           })
         })
       },)
-
   })
 
 
@@ -358,7 +357,7 @@ const makeDFSPSupportingPISPSteps = (_constConfig: ConstConfig, globalConfig: Gl
       }))
     },
     {
-      name: 'register endpoint `TP_CB_UsRL_CONSENT_PUT`',
+      name: 'register endpoint `TP_CB_URL_CONSENT_PUT`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
         participantId: participant.id,
