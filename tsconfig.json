@@ -1,8 +1,6 @@
 {
   "include": [
     "src",
-    "**/*.test.ts",
-    "test"
   ],
   "exclude": [
     "node_modules",

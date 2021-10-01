@@ -1,8 +1,8 @@
 {
   "name": "ml-bootstrap",
-  "version": "0.3.22",
+  "version": "0.3.26",
   "description": "Bootstrapper tool for Mojaloop OSS Lab",
-  "main": "dist/cli.js",
+  "main": "dist/src/cli.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -18,7 +18,7 @@
     "test:unit": "jest --testMatch '**/test/unit/**/*.(test|spec).ts'"
   },
   "bin": {
-    "ml-bootstrap": "./dist/cli.js"
+    "ml-bootstrap": "./dist/src/cli.js"
   },
   "repository": {
     "type": "git",

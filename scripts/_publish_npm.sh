@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -u
 
 # Notes:
@@ -21,6 +22,7 @@ set -e
 RELEASE_TAG=${RELEASE_TAG-`cat package.json | jq .version -r`}
 PACKAGE_NAME=${PACKAGE_NAME-`cat package.json | jq .name -r`}
 
+rm -rf ${DIR}/../dist
 npm run build
 
 echo "Releasing ${PACKAGE_NAME}:${RELEASE_TAG}"
