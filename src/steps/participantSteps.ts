@@ -220,39 +220,6 @@ const makeDfspSteps = (
       }))
     },
     {
-      name: 'register email `NET_DEBIT_CAP_ADJUSTMENT_EMAIL`',
-      ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-        participantId: participant.id,
-        body: {
-          type: 'NET_DEBIT_CAP_ADJUSTMENT_EMAIL',
-          value: `email@example.com`
-        }
-      }))
-    },
-    {
-      name: 'register email `SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL`',
-      ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-        participantId: participant.id,
-        body: {
-          type: 'SETTLEMENT_TRANSFER_POSITION_CHANGE_EMAIL',
-          value: `email@example.com`
-        }
-      }))
-    },
-    {
-      name: 'register email `NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL`',
-      ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-        participantId: participant.id,
-        body: {
-          type: 'NET_DEBIT_CAP_THRESHOLD_BREACH_EMAIL',
-          value: `email@example.com`
-        }
-      }))
-    },
-    {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_BULK_TRANSFER_POST`',
       ignoreFailure: false,
       command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
@@ -336,7 +303,7 @@ const makeDfspSteps = (
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_GET',
-          value: `${participant.fspiopCallbackUrl}/4000/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
+          value: `${participant.fspiopCallbackUrl}/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
         }
       }))
     },
@@ -347,7 +314,7 @@ const makeDfspSteps = (
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT',
-          value: `${participant.fspiopCallbackUrl}/4000/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
+          value: `${participant.fspiopCallbackUrl}/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
         }
       }))
     },
@@ -358,7 +325,7 @@ const makeDfspSteps = (
         participantId: participant.id,
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT_ERROR',
-          value: `${participant.fspiopCallbackUrl}/4000/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}/error`
+          value: `${participant.fspiopCallbackUrl}/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}/error`
         }
       }))
     },
