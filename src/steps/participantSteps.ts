@@ -65,19 +65,6 @@ const makeCommonSteps = (
         }
       }))
     },
-
-    {
-      name: 'register endpoint `FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE`',
-      ignoreFailure: false,
-      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
-        participantId: participant.id,
-        body: {
-          type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE',
-          // TODO: this looks wrong to me!
-          value: `${participant.fspiopCallbackUrl}`
-        }
-      }))
-    },
   ]
 }
 
@@ -326,6 +313,18 @@ const makeDfspSteps = (
         body: {
           type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT_ERROR',
           value: `${participant.fspiopCallbackUrl}/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}/error`
+        }
+      }))
+    }, 
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE',
+          // TODO: this looks wrong to me!
+          value: `${participant.fspiopCallbackUrl}`
         }
       }))
     },

@@ -1,6 +1,6 @@
 {
   "name": "ml-bootstrap",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "description": "Bootstrapper tool for Mojaloop OSS Lab",
   "main": "dist/src/cli.js",
   "typings": "dist/index.d.ts",
