@@ -139,6 +139,7 @@ const makeDfspSteps = (
 
 
   return [
+    ...currencySteps,
     {
       name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_PUT`',
       ignoreFailure: false,
