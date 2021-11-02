@@ -285,6 +285,83 @@ const makeDfspSteps = (
         }
       }))
     },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT',
+          value: `${participant.fspiopCallbackUrl}/participants/{{requestId}}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_SUB_ID_DELETE`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_SUB_ID_DELETE',
+          value: `${participant.fspiopCallbackUrl}/participants/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_SUB_ID_PUT`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_SUB_ID_PUT',
+          value: `${participant.fspiopCallbackUrl}/participants/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTICIPANT_SUB_ID_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_SUB_ID_PUT_ERROR',
+          value: `${participant.fspiopCallbackUrl}/participants/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}/error`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_GET`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_GET',
+          value: `${participant.fspiopCallbackUrl}/4000/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT',
+          value: `${participant.fspiopCallbackUrl}/4000/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}`
+        }
+      }))
+    },
+    {
+      name: 'register endpoint `FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT_ERROR`',
+      ignoreFailure: false,
+      command: wrapWithRunResult(() => Requests.postEndpoint(globalConfig.urls.centralLedgerAdmin, {
+        participantId: participant.id,
+        body: {
+          type: 'FSPIOP_CALLBACK_URL_PARTIES_SUB_ID_PUT_ERROR',
+          value: `${participant.fspiopCallbackUrl}/4000/parties/{{partyIdType}}/{{partyIdentifier}}/{{partySubIdOrType}}/error`
+        }
+      }))
+    },
   ]
 }
 
